@@ -1,12 +1,9 @@
 .list-item-person{
-    transition: all 0.5s
-}
+    transition: all 0.5s;
+    border-bottom: 1px  dashed rgb(209, 209, 209) !important;
+    }
 .list-item-person:hover{
 background-color: rgb(247, 247, 247);
-}
-
-.ant-list{
-    border: 1px  dashed rgb(209, 209, 209)
 }
 .rank-page-main{
     display:flex;
@@ -15,6 +12,10 @@ background-color: rgb(247, 247, 247);
     background-color:white;
     border-radius: 1em;
     padding-top: 20px;
+    border: 1.5px dashed #ccc
+}
+.rank-page-main > div{
+  border: 1px solid #ccc
 }
 .rank-list{
     cursor: pointer;
@@ -73,7 +74,4 @@ background-color: rgb(247, 247, 247);
   }
   .edit-tag{
     cursor: pointer;
-  }
-  .tag-input{
-
   }

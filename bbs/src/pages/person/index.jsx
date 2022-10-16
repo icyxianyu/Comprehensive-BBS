@@ -1,8 +1,7 @@
 import React ,{useEffect,useState}from 'react'
 import PersonMsg from "./personMsg"
-import {Button}from "antd"
-import {Link,Outlet} from "react-router-dom"
-import {FileAddOutlined} from '@ant-design/icons'
+import {Outlet} from "react-router-dom"
+
 import {personMsg} from "#/utils/axios/index.js"
 import { useNavigate } from 'react-router-dom'
 export default function PersonPage() {
@@ -19,13 +18,9 @@ export default function PersonPage() {
     })
   },[])
   return (
-    <div>      
+    <div >      
       <PersonMsg msg={msg}></PersonMsg>
-      <Link to="/createPage">
-        <Button style={{borderRadius:"20%",border:"2px solid"}}>
-              <FileAddOutlined />创作
-        </Button>
-        </Link>
+      <br></br>
       <Outlet/>
     </div>
 

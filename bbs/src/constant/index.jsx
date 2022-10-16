@@ -18,4 +18,9 @@ export const Color=[
 "cyan",
 "blue",
 "geekblue",
-"purple"]
+"purple",
+"Brown",
+"Chocolate ",
+"LightSteelBlue ",
+"PaleVioletRed ",
+]

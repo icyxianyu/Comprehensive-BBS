@@ -87,6 +87,7 @@ module.exports ={
                         Sex:response[0].Sex,
                         Email:response[0].EMAIL,
                         usertags:response[0].usertags,
+                        note:response[0].note,
                     }
                     res.send(JSON.stringify({
                         code:200,
@@ -106,7 +107,6 @@ module.exports ={
                 username:person.Username
             }
             action.searchPerson(Id).then((item)=>{
-                console.log(item)
                 if(item.length>0){
                     action.search(inner).then((item)=>{
                         if(item.length===0||item[0].Username===person.Username){
@@ -117,7 +117,14 @@ module.exports ={
                                 person.Sex,
                                 person.usertags??"",
                                 person.note]
-                            action.updatePerson(temp,Id)
+                            action.updatePerson(temp,Id).then((item)=>{
+                                if(item.protocol41){
+                                    res.send(JSON.stringify({
+                                        code:200,
+                                        message:constant.info200
+                                    }))
+                                }
+                            })
                         }else{
                             res.send(JSON.stringify({
                                 code:400,
