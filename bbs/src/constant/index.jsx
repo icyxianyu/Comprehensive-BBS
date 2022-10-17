@@ -7,6 +7,7 @@ export const loginInfo=[
         name:"注册"
     }
 ]
+export const imageurl="http://localhost:3333/user/avatar/"
 export const Color=[
 "magenta",
 "red",

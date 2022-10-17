@@ -1,4 +1,4 @@
-import {HomeOutlined,PlayCircleOutlined,BarChartOutlined,DesktopOutlined,GithubOutlined,InfoCircleFilled} from '@ant-design/icons';
+import {HomeOutlined,PlayCircleOutlined,BarChartOutlined,DesktopOutlined} from '@ant-design/icons';
 import { Menu } from 'antd';
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -35,20 +35,6 @@ const items = [
   },
   {
     label:(
-      <span>
-        <InfoCircleFilled /> 
-      </span>
-    ),
-    key: 'Info',
-  },
-  {
-    label:(
-      <span><GithubOutlined/></span>
-    ),
-    key:'git'
-  },
-  {
-    label:(
       <Person/>
     ),
     key: 'PersonPage',
@@ -68,6 +54,7 @@ const App = () => {
           items={items} 
           style={{
             justifyContent: 'space-around',
+            height: '100%',
           }}
           onSelect={selectItem}
           />

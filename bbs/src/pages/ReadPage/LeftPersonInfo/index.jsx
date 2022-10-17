@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import {Affix,Card ,Avatar,Space,message} from "antd"
 import {HeartTwoTone,SnippetsOutlined} from '@ant-design/icons';
 import {searchLike,changeLike,addCollection} from "#/utils/axios"
+import {imageurl} from "#/constant" 
 export default function LeftInfo(prop) {
 const [Like,setLike]= useState()
 const [collection,setCollection]= useState();
@@ -52,7 +53,7 @@ const changeAction=(name,methods)=>{
         <Card title={
         <div>
             <Avatar 
-            src={"https://joeschmoe.io/api/v1/random"} 
+            src={`${imageurl}${prop.Person.avatar}`} 
             size={64}
             />
             <span span={10}> 

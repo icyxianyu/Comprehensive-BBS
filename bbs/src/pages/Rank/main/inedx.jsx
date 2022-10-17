@@ -1,7 +1,7 @@
 import { Avatar, Button, List, Skeleton,Space,Tag,Descriptions, message,} from 'antd';
 import {LikeOutlined} from "@ant-design/icons"
 import React, { useEffect, useState } from 'react';
-import {Color} from "#/constant"
+import {Color,imageurl} from "#/constant"
 import {searchRank} from "#/utils/axios"
 import {useNavigate} from "react-router-dom"
 const count = 5;
@@ -90,7 +90,7 @@ const App = (props) => {
             <List.Item.Meta onClick={()=>changeToRead(item.BBSID)}
             className="rank-list"
               style={{borderBottom: "1px solid #ccc"}}
-              avatar={<Avatar src={item.picture} />}
+              avatar={<Avatar s src={`${imageurl}${item.avatar}`} />}
               title={
                 <>
                   <span>{item.TiTle}</span>

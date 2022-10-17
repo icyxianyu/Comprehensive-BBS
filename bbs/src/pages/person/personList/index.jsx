@@ -4,35 +4,41 @@ import { LikeOutlined,
     EyeOutlined,
     CheckOutlined,
     BookOutlined} from '@ant-design/icons';
-import { Avatar,Tag, List, message, Space,Col,Row ,Card,Statistic,Segmented} from 'antd';
+import { Avatar,Tag,
+   List, message,
+    Space,Col,Row ,
+    Card,Statistic,
+    Segmented,Skeleton} from 'antd';
 import {useEffect,useState} from "react"
 import React from 'react';
 import {useNavigate} from "react-router-dom"
 import {searchtext,textGetData,searchcollection} from '#/utils/axios'
-import {Color} from "#/constant"
+import {Color,imageurl} from "#/constant"
 const IconText = ({ icon, text }) => (
   <Space>
     {React.createElement(icon)}
     {text}
   </Space>
 );
+
 const Info=["文章","收藏"];
-const InfoMesage={
-  "文章":'message',
-  "收藏":"collection"
-}
 const PersonList = () =>{
 const [list,setlist]=useState([]);
 const [data,setdata]=useState({});
 const navigate=useNavigate();
+const [isloading,setloading]=useState(false);
 const getdata= (response)=>{
   if(response.code===200)
   setlist(response.message)
   else{
     message.error("获取文章失败")
   }
+  setTimeout(()=>
+  setloading(false)
+  ,100)
 }
   useEffect(()=>{
+    setloading(true)
     searchtext(localStorage.getItem('PersonID')).
     then((response)=>{getdata(response)});
   },[])
@@ -50,6 +56,7 @@ const changeToReadPage=(item)=>{
     navigate(`/ReadPage/${item.BBSID}`)
   }
 const changetips=(e)=>{
+  setloading(true)
 if(e==="文章"){
   searchtext(localStorage.getItem('PersonID')).
   then((response)=>{getdata(response)});
@@ -89,6 +96,7 @@ if(e==="文章"){
          <div style={{backgroundColor:"white",padding:"2px" ,borderBottom:"1px solid #CCC"}}>
             <Segmented options={Info} size={'large'} onChange={changetips}/>
          </div>
+         <Skeleton active avatar={true} loading={isloading}>
        <List
         itemLayout="vertical"
         size="large"
@@ -116,7 +124,7 @@ if(e==="文章"){
             }
           >
             <List.Item.Meta
-              avatar={<Avatar src={"https://joeschmoe.io/api/v1/random"} />}
+              avatar={<Avatar src={`${imageurl}${item.avatar}`} />}
               title={<b>{item.Title}</b>}
               description={item.Username}
             />
@@ -124,6 +132,7 @@ if(e==="文章"){
           </List.Item>
         )}
       />
+      </Skeleton>
       </Col>
   </Row>
 )};
@@ -149,7 +158,7 @@ function Message(props){
         }}
         color={Color[Math.floor(Math.random()*Color.length)]}
         >
-          <div style={{margin:"auto"}}>
+          <div style={{margin:"auto",textTransform:"capitalize",}}>
           {title}
           </div>
         </Tag>

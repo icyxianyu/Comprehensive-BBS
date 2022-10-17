@@ -1,1 +1,3 @@
 node_modules
+serve/image/*
+!serve/image/404.png

@@ -11,10 +11,12 @@ export default function ReadPage() {
     useEffect(()=>{
         searchTextInfoAPI(BBSID).then((response)=>{
           if(response.code===200){
+            console.log(response)
             response=response.message
             setPerson({
               Username: response.Username,
-              BBSID: response.BBSID
+              BBSID: response.BBSID,
+              avatar: response.avatar
             })
             setTextInfo({
               Username: response.Username,

@@ -1,10 +1,12 @@
 import React ,{useState,useEffect,useRef} from 'react'
-import {Link} from "react-router-dom"
+import {Link,useNavigate} from "react-router-dom"
 import {message, Descriptions,Tag,Col, Row ,Button,Modal,Form,Input,Radio,Tooltip} from 'antd';
-import {BarsOutlined,PlusOutlined,FileAddOutlined} from  '@ant-design/icons'
+import {BarsOutlined,PlusOutlined,FileAddOutlined,ExclamationCircleOutlined} from  '@ant-design/icons'
 import {Color} from "#/constant/index.jsx"
 import {changePersonInfo} from "#/utils/axios"
 import {nanoid} from "nanoid"
+import { useCookies } from 'react-cookie';
+
 const user={
   name:"姓名",
   phone:"电话",
@@ -14,6 +16,9 @@ const user={
   tags:"个人标签"
 }
 export default function PersonMsg(prop) {
+  const { confirm } = Modal;
+  const [,setCookie] = useCookies(['JWT']);
+  const navigate=useNavigate();
   const {msg}=prop;
   const [changtags,setTags]=useState([]);
   const [usermsg,setmsg]=useState({});
@@ -46,6 +51,21 @@ export default function PersonMsg(prop) {
   };
   const getTags =(value)=>{
     setTags(value);
+  }
+  const exit=()=>{
+    confirm({
+      title: '确定要退出吗?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        setCookie("JWT","",{maxAge:0});
+        localStorage.removeItem("PersonID");
+        navigate('/loginPage');
+      },
+      cancelText:"取消",
+      okText:"确定",
+
+    });
+
   }
   useEffect(()=>{
     setmsg(msg);
@@ -96,6 +116,10 @@ export default function PersonMsg(prop) {
                         <FileAddOutlined />创作
                 </Button>
               </Link>
+              <br/><br/>
+              <Button style={{borderRadius:"30%"}}danger onClick={exit}>
+                    退出
+                </Button>
           </Col>
         </Row>
         </Col>

@@ -74,4 +74,36 @@ background-color: rgb(247, 247, 247);
   }
   .edit-tag{
     cursor: pointer;
+  } 
+  .footer{
+     width: 100%;
+     height: 100%;
+     display: flex; 
+  }
+  .footer .container{
+    width:50%;
+    height:100%;
+    margin:auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .footer .container>div{
+    flex:1;
+    text-align:center;
+  }
+  .footer .container .about{
+    font-weight: bold;
+  }
+  .footer .container .about .box{
+    height: 100%;
+    width:50%;
+    display: inline-block;
+    border-bottom: 1px solid #ccc;
+    font-size: 18px
+  }
+  .footer .container .media{
+    font-size: 18px
+  }
+  .footer .container .media span{
+    margin-left: 10px;
   }

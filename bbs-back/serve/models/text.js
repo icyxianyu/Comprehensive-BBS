@@ -12,7 +12,7 @@ module.exports={
                     else{  
                         const textData={
                             BBSID:textinfo.BBSID,
-                            Like:0,
+                            Likes:0,
                             collection:0,
                         }
                         db.query(
@@ -37,8 +37,8 @@ module.exports={
                 SElECT 
                 textmsg.BBSID,Mainmini,usermsg.Username,Title,tags,
                 textdata.Likes,
-                textdata.collection,haveSeen
-
+                textdata.collection,haveSeen,
+                usermsg.avatar
                 FROM textmsg  
                     JOIN usermsg 
 				on textmsg.PersonID =usermsg.PersonID 
@@ -57,7 +57,12 @@ module.exports={
         return new Promise((resolve) =>{
             db.query(
                 `SElECT
-                textmsg.BBSID,usermsg.Username,Title,Main,tags,TIME,textdata.Likes,textdata.collection,textdata.comments
+                textmsg.BBSID,
+                usermsg.Username,
+                Title,Main,tags,
+                TIME,textdata.Likes,
+                textdata.collection,textdata.comments,
+                usermsg.avatar
                 FROM textmsg 
                     JOIN usermsg
                 on textmsg.PersonID =usermsg.PersonID
@@ -111,7 +116,7 @@ module.exports={
             textmsg.BBSID,Mainmini,usermsg.Username,Title,tags,
             textdata.Likes,
             textdata.collection,haveSeen
-
+            ,usermsg.avatar
             FROM textmsg  
                 JOIN usermsg 
             on textmsg.PersonID =usermsg.PersonID 

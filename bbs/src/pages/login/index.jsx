@@ -6,9 +6,10 @@ import {LockOutlined, UserOutlined ,MailOutlined,PhoneOutlined} from '@ant-desig
 import {Menu,Row,Col, Button, Checkbox, Form, Input,Radio, message,Spin} from "antd"
 import {registerAPI,loginAPI} from "#/utils/axios"
 import { useCookies } from 'react-cookie';
+import HeaderInfo from './header';
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const [action,setAction] =useState('login')
+  const [action,setAction] =useState('login');
   const items=loginInfo.map((item)=>{
     return{
       label:item.name,
@@ -23,7 +24,7 @@ export default function LoginPage() {
   }
   return (
     <div>
-      <Spin spinning={loading}>   
+      <Spin spinning={loading}>
         <Row>
             <Col span={12} offset={6}>
               <Menu items={items} mode="horizontal"
@@ -42,7 +43,7 @@ export default function LoginPage() {
 function FromList(prop){
   const [action,setAction]=useState(prop.action);
   const [,setCookie] = useCookies(['JWT']);
-  
+  const [file,setfile]=useState([]);
   const navigate=useNavigate();
   useEffect(()=>{
     setAction(prop.action);
@@ -56,9 +57,9 @@ function FromList(prop){
             response.code===400) 
             message.error(response.message)
           else if(response.code===200){
-            console.log(response)
             message.success(response.message);
-            localStorage.setItem("PersonID",response.PersonID)
+            localStorage.setItem("PersonID",response.PersonID);
+            localStorage.setItem("avatar",response.avatar);
             setCookie("JWT",response.token,{maxAge:864000})
             navigate("/personPage")     
           }
@@ -68,7 +69,16 @@ function FromList(prop){
       })
       
   };
+  const getfile=(e)=>{
+    setfile(e);
+  }
   const doRegist = (values) => {
+    if(file.length===0){
+      message.info("头像未上传")
+      return;
+    }else {
+      values.avatar=file[0];
+    }
     prop.changeLoding(true);
     if(values.confirmpassword!==values.password){
       message.error("密码不一致")
@@ -151,6 +161,8 @@ function FromList(prop){
           )
     else if(action==="register")
       return(
+        <>
+        <HeaderInfo getfile={getfile}/>
         <Form
         name="normal_regist"
               className="regist-form"
@@ -239,5 +251,6 @@ function FromList(prop){
                 </Button>
         </Form.Item>
       </Form>
+      </>
       )
 }

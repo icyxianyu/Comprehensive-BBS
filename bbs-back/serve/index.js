@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const NodeMediaServer = require('node-media-server');
 
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '10mb'}))
 app.use(express.json())
 app.use(cors());
 app.use(cookieParser());
