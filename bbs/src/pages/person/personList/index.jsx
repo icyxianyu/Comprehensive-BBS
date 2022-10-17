@@ -8,7 +8,7 @@ import { Avatar,Tag, List, message, Space,Col,Row ,Card,Statistic,Segmented} fro
 import {useEffect,useState} from "react"
 import React from 'react';
 import {useNavigate} from "react-router-dom"
-import {searchtextSelfAPI} from '#/utils/axios'
+import {searchtext,textGetData,searchcollection} from '#/utils/axios'
 import {Color} from "#/constant"
 const IconText = ({ icon, text }) => (
   <Space>
@@ -17,28 +17,46 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 const Info=["文章","收藏"];
-const InfoMsage={
+const InfoMesage={
   "文章":'message',
   "收藏":"collection"
 }
 const PersonList = () =>{
-  const [list,setlist]=useState([])
-  const navigate=useNavigate();
+const [list,setlist]=useState([]);
+const [data,setdata]=useState({});
+const navigate=useNavigate();
+const getdata= (response)=>{
+  if(response.code===200)
+  setlist(response.message)
+  else{
+    message.error("获取文章失败")
+  }
+}
   useEffect(()=>{
-    searchtextSelfAPI().then((response)=>{
-      if(response.code===200)
-      setlist(response.message)
-      else{
-        message.error("获取文章失败")
-      }
+    searchtext(localStorage.getItem('PersonID')).
+    then((response)=>{getdata(response)});
+  },[])
+  useEffect(()=>{
+    textGetData(localStorage.getItem('PersonID')).then((response)=>{
+        if(response.code===200){
+          setdata(response.data)
+        }
+        else{
+          message.error("")
+        }
     })
   },[])
-  const changeToReadPage=(item)=>{
+const changeToReadPage=(item)=>{
     navigate(`/ReadPage/${item.BBSID}`)
   }
 const changetips=(e)=>{
-  let temp=InfoMsage[e];
-  
+if(e==="文章"){
+  searchtext(localStorage.getItem('PersonID')).
+  then((response)=>{getdata(response)});
+}else{
+  searchcollection(localStorage.getItem('PersonID')).
+  then((response)=>{getdata(response)});
+}
 }
   return (
     <Row>
@@ -48,10 +66,10 @@ const changetips=(e)=>{
       >
           <Row>
           <Col span={12}>
-            <Statistic title="点赞数" value={1128} prefix={<LikeOutlined />} />
+            <Statistic title="点赞数" value={data.Likes} prefix={<LikeOutlined />} />
             </Col>
             <Col span={12}>
-              <Statistic title="文章查看数" value={93} prefix={<BookOutlined />} />
+              <Statistic title="文章查看数" value={data.haveSeen} prefix={ <EyeOutlined />} />
           </Col>
           </Row>
           <br/>      
@@ -60,7 +78,7 @@ const changetips=(e)=>{
             <Statistic title="关注者" value={200} prefix={<CheckOutlined />} />
             </Col>
             <Col span={12}>
-              <Statistic title="文章收藏数" value={100} prefix={<EyeOutlined />} />
+              <Statistic title="文章被收藏数" value={data.collection} prefix={<BookOutlined />} />
           </Col>
           </Row>
 

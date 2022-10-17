@@ -13,7 +13,7 @@ export default function PersonPage() {
         navigate('/loginPage')
       }
       else if(item.code===200){
-        setMsg(item.data)
+        setMsg(item.data);
       }
     })
   },[])

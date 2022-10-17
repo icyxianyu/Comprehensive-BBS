@@ -35,7 +35,10 @@ module.exports={
             db.query(
                 `
                 SElECT 
-                textmsg.BBSID,Mainmini,usermsg.Username,Title,tags,textdata.Likes,textdata.collection
+                textmsg.BBSID,Mainmini,usermsg.Username,Title,tags,
+                textdata.Likes,
+                textdata.collection,haveSeen
+
                 FROM textmsg  
                     JOIN usermsg 
 				on textmsg.PersonID =usermsg.PersonID 
@@ -81,9 +84,8 @@ module.exports={
             })
         })
     },
-    changeLike(BBSID, action){
+    changeLike(BBSID){
         return new Promise((resolve,reject)=>{
-            if(action==="add")
         db.query(
             `update textdata set Likes=Likes+1 where BBSID=?`,
             [BBSID],
@@ -92,6 +94,50 @@ module.exports={
             else resolve(result)
             })
         })   
+    },
+    search(PersonID){
+        return new Promise((resolve)=>{
+            db.query(`select collection
+             from usermsg 
+             where PersonID = ?`,[PersonID],(err,result)=>{
+                if(err) throw err;
+                else resolve(result);
+            })
+        })
+    },
+    searchcollection(BBSID){
+        return new Promise((resolve)=>{
+            db.query(`SElECT 
+            textmsg.BBSID,Mainmini,usermsg.Username,Title,tags,
+            textdata.Likes,
+            textdata.collection,haveSeen
+
+            FROM textmsg  
+                JOIN usermsg 
+            on textmsg.PersonID =usermsg.PersonID 
+                LEFT JOIN textdata 
+            on textmsg.BBSID=textdata.BBSID
+            where textmsg.BBSID in (?)`,[BBSID],(err, result)=>{
+                if(err) throw err;
+                else resolve(result);
+            })
+        })
+    },
+    addCollectionPerson(BBSID,PersonID){
+        return new Promise((resolve)=>{
+            db.query(`update usermsg set collection =? 
+            where PersonID=?`,
+            [BBSID,PersonID],(err,result)=>{
+                if(err) throw err;
+                else {resolve(result)};
+            })
+        })
+    },
+    addCollection(BBSID){
+        db.query(`update textdata set collection = collection + 1 where BBSID =?`,[BBSID])
+    },
+    deleteCollection(BBSID){
+        db.query(`update textdata set collection = collection - 1 where BBSID =?`,[BBSID])
     },
     sendComment(BBSID, action){
         
@@ -125,5 +171,8 @@ module.exports={
                 )
         })
 
+    },
+    addHaveSeen(BBSID){
+        db.query(`update textdata set haveSeen = haveSeen + 1 where BBSID =?`,[BBSID])
     }
 }

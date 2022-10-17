@@ -60,7 +60,8 @@ module.exports ={
                 res.send(JSON.stringify({
                     code:200,
                     token,
-                    message:constant.private.info200
+                    message:constant.private.info200,
+                    PersonID:result[0].PersonID
                 }))
             }else{
                 res.send(JSON.stringify({

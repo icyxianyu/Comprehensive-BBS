@@ -29,12 +29,24 @@ module.exports ={
         })
     },
     searchtextPerson(req, res){
-        midtoken(req,res,(decoded)=>{
-            let PersonID=decoded.PersonID;
+            let PersonID=req.body.PersonID;
             action.searchBypersonID(PersonID).then((item)=>{
                 res.send(JSON.stringify(
                     {code:200,
                     message:item}))
+            })
+    },
+    getcollection(req, res){
+        let PersonID=req.body.PersonID;
+        action.search(PersonID).then((item)=>{
+            let BBSID=item[0].collection.split(" ").filter((item)=>{
+                return item!==""
+            });
+            action.searchcollection(BBSID).then((item)=>{
+                res.send(JSON.stringify({
+                    code:200,
+                    message:item
+                }))
             })
         })
     },
@@ -43,6 +55,7 @@ module.exports ={
         action.searchTextInfo(BBSID).then((item)=>{
            res.send(JSON.stringify({code:200,message:item[0]
         }))
+        action.addHaveSeen(BBSID)
         })
     },
     searchLike(req,res){
@@ -60,6 +73,36 @@ module.exports ={
                 code:200
             }));
         })
+    },
+    addCollection(req, res){
+      midtoken(req,res,(decoded)=>{
+          let PersonID=decoded.PersonID;
+          let BBSID=req.body.BBSID;
+            action.search(PersonID).then((item)=>{
+            let collection=item[0].collection;
+            let len=(item[0].collection??"").split(" ");
+            let have=len.some((i)=>{
+                return i===BBSID;
+            })
+           if(have){
+               res.send(JSON.stringify({
+                   code:403,
+                   message:consttext.collection.info403
+               }))
+           }else{
+            collection+=" "+BBSID;
+            action.addCollectionPerson(collection,PersonID).then((item)=>{
+                if(item.protocol41){
+                     action.addCollection(BBSID);
+                    res.send(JSON.stringify({
+                        code:200,
+                        message:consttext.collection.info200
+                 }))
+                }
+            })
+           }
+        })
+      })  
     },
     sendComment(req,res){
         midtoken(req,res,(decoded)=>{      
@@ -88,5 +131,26 @@ module.exports ={
                 response:response
             })
         })
+    },
+    getData(req, res){
+            let PersonID=req.body.PersonID;
+            action.searchBypersonID(PersonID).then((item)=>getinfo(res,item))
     }
+}
+function getinfo(res,items){ //获取用户信息
+
+        let data={
+            Likes:0,
+            collection:0,
+            haveSeen:0,
+        }
+        items.forEach((item)=>{
+            data.Likes+=item.Likes;
+            data.collection+=item.collection;
+            data.haveSeen+=item.haveSeen;
+        });
+        res.send(JSON.stringify({
+            code:200,
+            data,
+        }))
 }

@@ -56,7 +56,9 @@ function FromList(prop){
             response.code===400) 
             message.error(response.message)
           else if(response.code===200){
+            console.log(response)
             message.success(response.message);
+            localStorage.setItem("PersonID",response.PersonID)
             setCookie("JWT",response.token,{maxAge:864000})
             navigate("/personPage")     
           }

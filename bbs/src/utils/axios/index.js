@@ -36,13 +36,25 @@ export const sendtextAPI=(value)=>{//发送文章
         data:value,
     })
 }
-export const searchtextSelfAPI=()=>{//搜索文章 个人用
+export const searchtext=(value)=>{//搜索文章 根据personID的内容
     return request({
-        method:'get',
-        url:'/text/getTextBySelfPersonID'
+        method:'post',
+        url:'/text/getTextByPersonID',
+        data:{
+            PersonID:value
+        }
     })
 }
-export const searchTextInfoAPI=(value)=>{//获取文章
+export const searchcollection=(value)=>{
+    return request({
+        method:"post",
+        url:'/text/getcollectionByPersonID',
+        data:{
+            PersonID:value
+        }
+    })
+}
+export const searchTextInfoAPI=(value)=>{//获取文章的内容
     return request({
         method:"get",
         url:`/text/searchTextInfo?BBSID=${value}`,
@@ -54,7 +66,14 @@ export const searchLike=(value)=>{ //获取喜欢
         url:`/text/searchLike?BBSID=${value}`,
     })
 }
-
+export const textGetData=(value)=>{ //获取用户的数据
+    return request({
+        method:"POST",
+        url:"/text/getData",
+        data:{
+            PersonID:value}
+    })
+}
 export const changeLike=(BBSID,action)=>{ //修改是否喜欢
     return request({
         method: 'put',
@@ -65,7 +84,15 @@ export const changeLike=(BBSID,action)=>{ //修改是否喜欢
         }
     })
 }
-
+export const addCollection=(BBSID)=>{ //添加收藏
+    return request({
+        method: 'post',
+        url:`/text/addCollection`,
+        data:{
+            BBSID,
+        }
+    })
+}
 export const sendComment=(value)=>{ //发送评论
     return request({
         method: 'post',

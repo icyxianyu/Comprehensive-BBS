@@ -2,10 +2,10 @@ import React ,{useState,useEffect} from 'react'
 import { useParams } from 'react-router-dom';
 import {Affix,Card ,Avatar,Space,message} from "antd"
 import {HeartTwoTone,SnippetsOutlined} from '@ant-design/icons';
-import {searchLike,changeLike} from "#/utils/axios"
+import {searchLike,changeLike,addCollection} from "#/utils/axios"
 export default function LeftInfo(prop) {
-const [Like,setLike]= useState(0)
-const [collection,setCollection]= useState(0);
+const [Like,setLike]= useState()
+const [collection,setCollection]= useState();
 const [isLike]= useState(false);
 const [isCollection]= useState(false);
 const colors={
@@ -26,7 +26,7 @@ useEffect(() =>{
         message.error("发生未知错误")
     }
   })
-})
+},[])
 const changeAction=(name,methods)=>{
   if(name==="Likes")
   changeLike(BBSID,methods).then((response)=>{
@@ -35,7 +35,15 @@ const changeAction=(name,methods)=>{
     }
   })
   else if(name==="collection"){
-
+    addCollection(BBSID).then((response)=>{
+      if(response.code===403){
+        message.info(response.message)
+      }
+      else if(response.code===200){
+        setCollection(collection+1)
+        message.success(response.message)
+      }
+    })
   }
 }
   return (
@@ -64,7 +72,9 @@ const changeAction=(name,methods)=>{
                 onClick={()=>changeAction("Likes","add")}/>
               <span style={{fontSize:"20px",userSelect:'none'}}>{Like}</span>
             </div>
-            <div  onClick={()=>changeLike("collection")}
+
+            <div  onClick={()=>changeAction("collection")}
+              style={{cursor: "pointer"}}
             >
                 <SnippetsOutlined  
                 style={{fontSize:"30px",color:colors[isCollection]
