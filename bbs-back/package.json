@@ -9,6 +9,7 @@
     "mysql": "^2.18.1",
     "nanoid": "^4.0.0",
     "node-media-server": "^2.4.7",
+    "socket.io": "^4.5.3",
     "uuid": "^8.3.2"
   }
 }

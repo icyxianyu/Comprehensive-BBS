@@ -84,13 +84,12 @@ const App = (props) => {
       dataSource={list}
       split={true}
       renderItem={(item) => (
-
         <List.Item>
           <Skeleton avatar title={false} loading={item.loading} active>
             <List.Item.Meta onClick={()=>changeToRead(item.BBSID)}
             className="rank-list"
               style={{borderBottom: "1px solid #ccc"}}
-              avatar={<Avatar s src={`${imageurl}${item.avatar}`} />}
+              avatar={<Avatar  src={`${imageurl}${item.avatar}`} />}
               title={
                 <>
                   <span>{item.TiTle}</span>

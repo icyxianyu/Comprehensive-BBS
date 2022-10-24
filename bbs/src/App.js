@@ -3,8 +3,17 @@ import HeaderPage from "./components/header"
 import Footerplace from "./components/footer"
 import routes from "./router"
 import {Layout} from "antd";
+import React,{useEffect} from "react"
+import socket from "#/utils/socket.js"
+import { useCookies } from 'react-cookie';
 const {Header,Content,Footer}=Layout;
 export default function App() {
+  const [cookie] = useCookies(['JWT']);
+  useEffect(()=>{
+    socket.getInstance().emit("login",JSON.stringify({
+      PersonID:cookie.JWT
+    }))
+  },[])
   const style="white";
   const element=useRoutes(routes);
     return(

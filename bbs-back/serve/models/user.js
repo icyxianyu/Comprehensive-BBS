@@ -29,6 +29,7 @@ insert(userinfo){
 },
 searchPerson(useinfo){
     return new Promise((resolve) =>{
+
         db.query(
              `SElECT * FROM usermsg where PersonID= ? `,[useinfo],
              (err,result)=>{
@@ -51,5 +52,32 @@ updatePerson(useinfo,id){
                         resolve(result)
                 })
     })
-}
+},
+Focus(PersonID){
+return new Promise((resolve,reject)=>{
+    db.query(`SELECT focus from usermsg where PersonID=?`,[PersonID],(err,result)=>{
+        if(err) reject(err);
+        else resolve(result);
+    })
+})
+},
+SelectFocus(PersonID){
+return new Promise((resolve,reject)=>{
+    db.query(`SELECT PersonID,avatar,Username from usermsg
+     where PersonID in (?)`,[PersonID],(err,result)=>{
+        if(err) reject(err);
+        else resolve(result);
+    })
+})
+},
+insertFocus(focusID,PersonID){
+    return new Promise((resolve,reject)=>{
+        db.query(`update usermsg set focus =? where PersonID=?`,
+        [focusID,PersonID],(err,result)=>{
+            if(err) reject(err);
+            else resolve(result);
+        })
+    })
+},
+
 }

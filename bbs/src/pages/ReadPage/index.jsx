@@ -11,12 +11,12 @@ export default function ReadPage() {
     useEffect(()=>{
         searchTextInfoAPI(BBSID).then((response)=>{
           if(response.code===200){
-            console.log(response)
             response=response.message
             setPerson({
               Username: response.Username,
               BBSID: response.BBSID,
-              avatar: response.avatar
+              avatar: response.avatar,
+              PersonID: response.PersonID
             })
             setTextInfo({
               Username: response.Username,
@@ -26,6 +26,7 @@ export default function ReadPage() {
               Tags:  response.tags,
               TIME:   response.TIME,
               comments:  response.comments,
+              avatar: response.avatar
             })
           }else{
             message.error("发生未知错误")

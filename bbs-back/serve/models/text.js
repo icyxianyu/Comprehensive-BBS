@@ -62,7 +62,8 @@ module.exports={
                 Title,Main,tags,
                 TIME,textdata.Likes,
                 textdata.collection,textdata.comments,
-                usermsg.avatar
+                usermsg.avatar,
+                usermsg.PersonID
                 FROM textmsg 
                     JOIN usermsg
                 on textmsg.PersonID =usermsg.PersonID
@@ -112,6 +113,7 @@ module.exports={
     },
     searchcollection(BBSID){
         return new Promise((resolve)=>{
+            try{
             db.query(`SElECT 
             textmsg.BBSID,Mainmini,usermsg.Username,Title,tags,
             textdata.Likes,
@@ -123,9 +125,12 @@ module.exports={
                 LEFT JOIN textdata 
             on textmsg.BBSID=textdata.BBSID
             where textmsg.BBSID in (?)`,[BBSID],(err, result)=>{
-                if(err) throw err;
+                if(err) resolve([]);
                 else resolve(result);
-            })
+            })}
+            catch(err) {
+                resolve([]);
+            }
         })
     },
     addCollectionPerson(BBSID,PersonID){
@@ -166,9 +171,12 @@ module.exports={
             }
             db.query(
 
-                `select textdata.BBSID,Likes,collection 
-                    PersonID,TiTle,Mainmini,Time,tags from textdata join textmsg on 
-                    textmsg.BBSID=textdata.BBSID `+temp+
+                `select textmsg.TIME,textdata.BBSID,Likes,textdata.collection 
+                PersonID,TiTle,Mainmini,Time,tags ,avatar
+                    from (textdata join textmsg on 
+                    textmsg.BBSID=textdata.BBSID)  LEFT JOIN 
+                    usermsg on 
+                    usermsg.PersonID=textmsg.PersonID `+temp+
                     `limit ${(start)*limit},${start+1*limit}`,(err,result)=>{
                         if(err) throw err
                         else resolve(result)
@@ -179,5 +187,5 @@ module.exports={
     },
     addHaveSeen(BBSID){
         db.query(`update textdata set haveSeen = haveSeen + 1 where BBSID =?`,[BBSID])
-    }
+    },
 }

@@ -23,6 +23,7 @@ module.exports ={
                         usertags:"",
                         note:"",
                         avatar:item,
+                        focus:"",
                     }
                     action.insert(user).then(()=>{
                         
@@ -77,8 +78,8 @@ module.exports ={
         })
     },
     person(req,res){
-        midtoken(req,res,(decoded)=>{
-            action.searchPerson(decoded.PersonID).
+            let PersonID = req.query.PersonID
+            action.searchPerson(PersonID).
             then((response) => {
                 if(response.length===0){
                     res.send(JSON.stringify({
@@ -102,9 +103,7 @@ module.exports ={
                     }))
                 }
             })
-        })
-
-          
+        // })
     },
     change(req, res) {
         midtoken(req,res,(decoded)=>{
@@ -168,5 +167,67 @@ module.exports ={
           });
 
 
+    },
+    isfollow(req, res) {
+        midtoken(req,res,(decoded)=>{
+            let PersonID=decoded.PersonID;
+            let searhID=req.query.Search;
+            action.Focus(PersonID).then((item)=>{
+                let isfocus=item[0]?.focus?.split(" ")?.some(item=>{
+                    return item===searhID;
+                });
+               if(isfocus){
+                   res.send(JSON.stringify({isfocus:true}));
+                   return;
+               }else{ 
+                   res.send(JSON.stringify({isFocus:false}));
+               }
+            })
+        })
+    },
+    followMsg(req, res){
+        let PersonID=req.query.PersonID;
+        action.Focus(PersonID).then((item)=>{
+            let temp=item[0]?.focus?.split(" ")?.filter((item)=>item!=="")
+    
+                action.SelectFocus(temp).then((item)=>{
+                    res.send(JSON.stringify({
+                        code:200,
+                        number:item.length,
+                        msg:item
+                    }))
+                })
+        })
+
+    },
+    changeFocus(req,res){
+        midtoken(req,res,(decoded)=>{
+            let PersonID=decoded.PersonID;
+            let changeFocus=req.query.focusID;
+            let method=req.query.action==="true"?true:false;
+            action.Focus(PersonID).then(item=>{
+                let isfocus=item[0]?.focus?.split(" ")??[];
+                let index=-1;
+
+                for(let i=0;i<isfocus.length;i++){
+                    if(isfocus[i]===changeFocus){
+                        index=i;
+                        break;
+                    }
+                }
+                if(!method){
+                    isfocus.splice(index,1);
+                }
+                else if(method&&index===-1){
+                    isfocus.push(changeFocus);
+                }
+                action.insertFocus(isfocus.join(" "),PersonID).then(item=>{
+                    res.send({
+                        code:200,
+                        action:method,
+                    })
+                });
+            })
+        })
     }
 }

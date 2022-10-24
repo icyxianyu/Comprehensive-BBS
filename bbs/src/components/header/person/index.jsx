@@ -16,7 +16,7 @@ useEffect(()=>{
 const navigate=useNavigate();
 function changetoPerson(){
     if(cookie.JWT){
-        navigate("/personPage")
+        navigate(`/personPage/${localStorage.getItem("PersonID")}`)
     }
     else{
         navigate("/loginPage")

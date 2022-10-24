@@ -25,7 +25,7 @@ const router= [{
     element:<LoginPage/>
 },{
     //个人主页
-    path:'/personPage',
+    path:'/personPage/:PersonID',
     element:<PersonPage/>,
     children:[
         {

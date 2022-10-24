@@ -3,12 +3,14 @@ import PersonMsg from "./personMsg"
 import {Outlet} from "react-router-dom"
 
 import {personMsg} from "#/utils/axios/index.js"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate ,useParams} from 'react-router-dom'
 export default function PersonPage() {
-  const [msg,setMsg]=useState([])
+  
+  const [msg,setMsg]=useState([]);
   const navigate=useNavigate();
+  const {PersonID} =useParams();
   useEffect(()=>{
-    personMsg().then((item)=>{
+    personMsg(PersonID).then((item)=>{
       if(item.code===404){
         navigate('/loginPage')
       }
@@ -16,7 +18,7 @@ export default function PersonPage() {
         setMsg(item.data);
       }
     })
-  },[])
+  },[PersonID])
   return (
     <div >      
       <PersonMsg msg={msg}></PersonMsg>

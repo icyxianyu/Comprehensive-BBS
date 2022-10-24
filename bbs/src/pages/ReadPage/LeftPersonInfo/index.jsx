@@ -1,5 +1,5 @@
 import React ,{useState,useEffect} from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams ,useNavigate } from 'react-router-dom';
 import {Affix,Card ,Avatar,Space,message} from "antd"
 import {HeartTwoTone,SnippetsOutlined} from '@ant-design/icons';
 import {searchLike,changeLike,addCollection} from "#/utils/axios"
@@ -13,7 +13,7 @@ const colors={
   false:'black',
   true:"red"
 };
-
+const navigate=useNavigate();
 const [top] = useState(74);
 const {BBSID} = useParams();
 useEffect(() =>{
@@ -48,13 +48,15 @@ const changeAction=(name,methods)=>{
   }
 }
   return (
-    <Affix offsetTop={top} style={{align: 'right'}}>
+    <Affix offsetTop={top} style={{align: 'right'}} >
       <div>
         <Card title={
         <div>
             <Avatar 
             src={`${imageurl}${prop.Person.avatar}`} 
             size={64}
+            style={{cursor: "pointer"}}
+            onClick={()=>navigate(`/PersonPage/${prop.Person.PersonID}`)}
             />
             <span span={10}> 
             {prop.Person.Username}</span>

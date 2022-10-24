@@ -1,12 +1,15 @@
 import React ,{useState,useEffect,useRef} from 'react'
-import {Link,useNavigate} from "react-router-dom"
-import {message, Descriptions,Tag,Col, Row ,Button,Modal,Form,Input,Radio,Tooltip} from 'antd';
-import {BarsOutlined,PlusOutlined,FileAddOutlined,ExclamationCircleOutlined} from  '@ant-design/icons'
+import {Link,useNavigate ,useParams} from "react-router-dom"
+import {message, Descriptions,Tag,Col,
+        Switch,Row ,Button,Modal,Form,
+        Input,Radio,Tooltip,Spin} from 'antd';
+import {BarsOutlined,PlusOutlined,FileAddOutlined,
+      ExclamationCircleOutlined} from  '@ant-design/icons'
 import {Color} from "#/constant/index.jsx"
-import {changePersonInfo} from "#/utils/axios"
+import {changePersonInfo,isFocused,changeFocus} from "#/utils/axios"
 import {nanoid} from "nanoid"
-import { useCookies } from 'react-cookie';
-
+import { useCookies} from 'react-cookie';
+import Chat from "./chat.jsx"
 const user={
   name:"姓名",
   phone:"电话",
@@ -16,6 +19,7 @@ const user={
   tags:"个人标签"
 }
 export default function PersonMsg(prop) {
+  const {PersonID} = useParams()
   const { confirm } = Modal;
   const [,setCookie] = useCookies(['JWT']);
   const navigate=useNavigate();
@@ -63,7 +67,6 @@ export default function PersonMsg(prop) {
       },
       cancelText:"取消",
       okText:"确定",
-
     });
 
   }
@@ -95,72 +98,78 @@ export default function PersonMsg(prop) {
                             return (<Tag key={nanoid()}
                               color={Color[Math.floor(Math.random()*Color.length)]}>
                                 {item}</Tag>)
-                          }):<span >还没有标签，点击添加吧</span>
+                          }):<span >无</span>
                       }
                     </div>
                     </Descriptions.Item>
                   
                 </Descriptions>
             </Col>
+            {localStorage.getItem("PersonID")===PersonID?
             <Col span={4} offset={4}>
-          
-            <Button style={{marginTop:'10%'}}
-              onClick={setok}
-              >
-              <BarsOutlined />修改信息
-              </Button>
-                <br/>
-                <br/>
-              <Link to="/createPage">
-                <Button style={{borderRadius:"30%"}} type="primary">
-                        <FileAddOutlined />创作
+              <Button style={{marginTop:'10%'}}
+                onClick={setok}
+                >
+                <BarsOutlined />修改信息
                 </Button>
-              </Link>
-              <br/><br/>
-              <Button style={{borderRadius:"30%"}}danger onClick={exit}>
-                    退出
-                </Button>
-          </Col>
+                  <br/>
+                  <br/>
+                <Link to="/createPage">
+                  <Button style={{borderRadius:"30%"}} type="primary">
+                          <FileAddOutlined />创作
+                  </Button>
+                </Link>
+                <br/><br/>
+                <Button style={{borderRadius:"30%"}}danger onClick={exit}>
+                      退出
+                  </Button>
+                          <Modal 
+                  title="修改信息" 
+                      visible={visible}
+                      onCancel={handleCancel}
+                      maskClosable={false}
+                      footer={null}        
+                      >
+                        <Form validateMessages={validateMessages} 
+                        initialValues={usermsg}
+                        onFinish={onFinish}>
+                            <Form.Item name={['Username']} label={user.name} rules={[{ required: true }]}>
+                              <Input />
+                            </Form.Item>
+                            <Form.Item name={['Email']} label={user.email} rules={[{required: true  }]}>
+                              <Input />
+                            </Form.Item>                  
+                            <Form.Item name={['Phone']} label={user.phone} rules={[{required: true  }]}>
+                              <Input />
+                            </Form.Item>
+                            <Form.Item name={['Sex']} label={user.sex} rules={[{ type: 'sex',required: true  }]}>
+                                <Radio.Group>
+                                <Radio value='mail'>男</Radio>
+                                <Radio value='femail'>女</Radio>
+                              </Radio.Group>
+                            </Form.Item>
+                            <Form.Item name={['note']} label={user.msg} rules={[{ type: 'msg' }]}>
+                              <Input />
+                            </Form.Item>
+                            标签: <Tags getTags={getTags} tags={tags}></Tags>
+                            <hr></hr>
+                            <Form.Item>
+                              <Button type="primary" htmlType="submit">
+                                提交
+                              </Button>
+                            </Form.Item>
+                        </Form>
+              </Modal>
+          </Col>:
+            <div style={{flex:1,display: 'flex',flexDirection: 'column'}}>
+              <IsFocus/>
+            <Chat usermsg={usermsg} PersonID={PersonID}/>
+            </div>
+          }
         </Row>
         </Col>
       </Row>
-    <Modal 
-        title="修改信息" 
-            visible={visible}
-            onCancel={handleCancel}
-            maskClosable={false}
-            footer={null}        
-            >
-              <Form validateMessages={validateMessages} 
-              initialValues={usermsg}
-              onFinish={onFinish}>
-                  <Form.Item name={['Username']} label={user.name} rules={[{ required: true }]}>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={['Email']} label={user.email} rules={[{required: true  }]}>
-                    <Input />
-                  </Form.Item>                  
-                  <Form.Item name={['Phone']} label={user.phone} rules={[{required: true  }]}>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={['Sex']} label={user.sex} rules={[{ type: 'sex',required: true  }]}>
-                      <Radio.Group>
-                      <Radio value='mail'>男</Radio>
-                      <Radio value='femail'>女</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                  <Form.Item name={['note']} label={user.msg} rules={[{ type: 'msg' }]}>
-                    <Input />
-                  </Form.Item>
-                  标签: <Tags getTags={getTags} tags={tags}></Tags>
-                  <hr></hr>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                      提交
-                    </Button>
-                  </Form.Item>
-              </Form>
-    </Modal>
+
       </>
   )
 }
@@ -280,3 +289,32 @@ const Tags = (props) => {
     </>
   );
 };
+const IsFocus=()=>{
+  const {PersonID} = useParams()
+  const [loading, setLoading]=useState(false);
+  const [isFocus,setFocus] = useState(false);
+  const changeFocused=()=>{
+    setLoading(true)
+      changeFocus(PersonID,!isFocus).then((item)=>{
+        if(item.code===200){
+          setFocus(item.action);
+          setLoading(false);
+        }
+      })
+  }
+  useEffect(() => {
+    isFocused(PersonID).then((item)=>{
+      setFocus(item.isfocus);
+    })
+  },[])
+return (         
+<Col span={8} offset={8} >
+  <div  style={{marginTop:"10px"}}>
+    <Spin spinning={loading}>
+      <Switch checkedChildren="点击取关" unCheckedChildren="点击关注" style={{width:"100%"}}
+      checked={isFocus}
+      onClick={changeFocused}/>
+      </Spin>
+    </div>
+</Col>)
+}

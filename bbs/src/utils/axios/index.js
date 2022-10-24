@@ -16,10 +16,28 @@ export const loginAPI=(value)=>{//登陆
     })
     
 }
-export const personMsg=()=>{//获取用户信息
+export const personMsg=(value)=>{//获取用户信息
     return request({
         method:'get',
-        url:'/user/person',
+        url:`/user/person?PersonID=${value}`,
+    })
+}
+export const isFocused=(value)=>{
+    return request({
+        method:'get',
+        url:`/user/isfollow?Search=${value}`
+    })
+}
+export const changeFocus=(focus,action)=>{
+    return request({
+        method:'get',
+        url:`/user/changeFocus?focusID=${focus}&action=${action}`
+    })
+}
+export const followMsg=(PersonID)=>{
+    return request({
+        method:'get',
+        url:`/user/followMsg?PersonID=${PersonID}`
     })
 }
 export const changePersonInfo=(value)=>{//修改用户信息

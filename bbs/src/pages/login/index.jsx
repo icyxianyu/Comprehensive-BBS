@@ -61,7 +61,7 @@ function FromList(prop){
             localStorage.setItem("PersonID",response.PersonID);
             localStorage.setItem("avatar",response.avatar);
             setCookie("JWT",response.token,{maxAge:864000})
-            navigate("/personPage")     
+            navigate(`/personPage/${response.PersonID}`)     
           }
           else{
               message.error("发生未知错误")

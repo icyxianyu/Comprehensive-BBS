@@ -8,7 +8,7 @@ export default function MainText(prop) {
   return (
     <Layout style={{backgroundColor:"white",}}>
             <Header style={{backgroundColor:"white" ,paddingLeft:"20px",fontWeight:"bold"}}>
-                <span style={{fontSize:"30px"}}>{prop.TextInfo.Title+" "}
+                <span style={{fontSize:"30px"}}>{prop.TextInfo.Title??""+" "}
                 </span> 
                 <small>{new Date(parseInt(prop.TextInfo.TIME)).toLocaleString()}</small>
                 <RandomTags tags={prop.TextInfo.Tags}/>
@@ -22,6 +22,7 @@ export default function MainText(prop) {
                     <Comments 
                         commentsInfo={prop.TextInfo.comments}
                         BBSID={prop.TextInfo.BBSID}
+                        avatar={prop.TextInfo.avatar}
                     ></Comments>
                 </Footer>
     </Layout>

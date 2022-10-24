@@ -39,7 +39,7 @@ module.exports ={
     getcollection(req, res){
         let PersonID=req.body.PersonID;
         action.search(PersonID).then((item)=>{
-            let BBSID=item[0].collection.split(" ").filter((item)=>{
+            let BBSID=item[0]?.collection?.split(" ")?.filter((item)=>{
                 return item!==""
             });
             action.searchcollection(BBSID).then((item)=>{
