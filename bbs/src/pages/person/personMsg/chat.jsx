@@ -10,6 +10,15 @@ export default function Chat(props) {
   const [text,settext]=useState("");
   const [cookie]=useCookies();
   const [changeState,setchange]=useState({});
+  const Ref =useRef();
+  const scrollToBottom=()=> {
+        const scrollHeight = Ref.current.scrollHeight;//里面div的实际高度  2000px
+        const height = Ref.current.clientHeight;  //网页可见高度  200px
+        const maxScrollTop = scrollHeight - height; 
+        Ref.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+      // 如果实际高度大于可见高度，说明是有滚动条的，则直接把网页被卷去的高度设置为两个div的高度差，实际效果就是滚动到底部了。
+  }
+
   const Getmsg=()=>{
     setvisible(true);
     socket.getInstance().emit("getMessage",JSON.stringify(
@@ -23,17 +32,20 @@ export default function Chat(props) {
     setvisible(false);
   }
   const sendMessage=()=>{
+    if(text.length===0) return ;
     socket.getInstance().emit("sendMessage",JSON.stringify({
       sendID:cookie.JWT,
       toPersonID:props.PersonID,
       MessageID:MessageID??"",
       text,
     }))
+    settext("")
   }
   useEffect(()=>{
     socket.getInstance().on("chatmsg",(obj)=>{
       if(obj.length===0)setChat([]);
       else{
+        console.log(obj)
         let temp=JSON.parse(obj[0].MainMessage);
         setMessageID(obj[0].MessageID);
         setChat(temp);
@@ -42,6 +54,7 @@ export default function Chat(props) {
   },[])
   useEffect(() => {
     socket.getInstance().on("addtext",(obj)=>{
+      console.log(obj)
       setchange(obj);
     })
   },[]);
@@ -51,7 +64,12 @@ export default function Chat(props) {
     setChat(temp);
     }
   },
-  [changeState])
+  [changeState]);
+  
+  useEffect(()=>{
+    if(chatMsg.length!==0)
+    scrollToBottom();
+  },[chatMsg])
   return (
     <>
     <div style={{textAlign: 'center'}}>
@@ -64,12 +82,15 @@ export default function Chat(props) {
       maskClosable={false}
       footer={null}  
     >
-      <div style={{height:"50vh"}}>
+      <div  className="chatbox" ref={Ref}>
         {
           chatMsg.map((item,index)=>{
-            return<div key={item.time}>
-              <Avatar />
-              <span style={{marginLeft:"5px"}}>{item?.text}</span>
+            return<div key={item.time} className={(item.PersonID===localStorage.getItem("PersonID")
+            ?"right":'left')+" single"}>
+              <Avatar className="avatar"/>
+              <div className="MainMessage">
+                  <div className="MainText"> {item?.text}</div>
+               </div>
             </div>
           })
         }
@@ -82,7 +103,7 @@ export default function Chat(props) {
         minRows: 3,
         maxRows: 3,
       }}
-      placeholder="输入文本"
+      placeholder="输入文本,不能为空"
       onPressEnter={sendMessage}
       onChange={(e)=>{
         settext(e.target.value)

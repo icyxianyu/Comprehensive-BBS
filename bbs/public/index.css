@@ -107,3 +107,62 @@ background-color: rgb(247, 247, 247);
   .footer .container .media span{
     margin-left: 10px;
   }
+  .chatbox{
+    padding-right:4px;
+    height:50vh;
+    overflow:auto;
+    overflow-y:overlay;
+  }
+  .chatbox::-webkit-scrollbar {
+    width: 4px;
+    display:none;
+}
+  .chatbox:hover::-webkit-scrollbar{
+    opacity: 1;
+    display: block;
+}
+  .chatbox::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+  .chatbox::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+}
+
+  .single{
+    display:flex;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  .left{
+    justify-content: flex-start;
+  }
+  .right{
+    justify-content: flex-end;
+  }
+  .right .avatar{
+    order:0;
+  }
+  .right .MainMessage{
+    order:-1;
+  }
+  .right .MainMessage .MainText{
+    background-color: rgb(88, 199, 243) !important;
+    color:white
+  }
+  .single .avatar{
+    margin:auto 0;
+  }
+  .single .MainMessage{
+    margin:5px;
+  }
+  .single .MainMessage .MainText{
+    padding:5px;
+    background-color:rgb(219, 218, 218);
+    border-radius: 5px;
+  }

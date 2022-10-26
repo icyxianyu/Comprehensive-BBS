@@ -16,25 +16,29 @@ function midtoken(JWT) {
       }
 }
 module.exports ={
-    login(obj){
+    login(obj,socket){
         const PersonID=midtoken(JSON.parse(obj).PersonID);
+        socket.join(PersonID);
     },
     getMessage(obj,socket){
             let message=JSON.parse(obj);
             let GetID=midtoken(message.GetID);
             let FindID=message.FindID
             action.getMessageByPersonID(GetID, FindID).then((item)=>{
-                
-                socket.emit("chatmsg",item)    
+        
+                if(item.length!==0){
+                    socket.join(item[0].MessageID);
+                }
+                socket.emit("chatmsg",item);
             })
     },
-    sendMessage(obj,socket){
+    sendMessage(obj,socket,io){
         let message=JSON.parse(obj);
         let sendID=midtoken(message.sendID);
         if(message.MessageID===""){
-            
+            let MessageID=uuid4();
                 let insert={
-                    MessageID:uuid4(),
+                    MessageID:MessageID,
                     MainMessage:JSON.stringify([
                         {
                             PersonID:sendID,
@@ -45,7 +49,10 @@ module.exports ={
                     UserID1:sendID,
                     UserID2:message.toPersonID,
             }
-            action.createtext(insert)
+            action.createtext(insert);
+            socket.join(MessageID);
+            io.to(MessageID).emit("chatmsg",[insert])
+            io.to(message.toPersonID).emit("chatmsg",[insert])
         }else{
             action.getMessageByMessageID(message.MessageID).then((item)=>{
                 let mainMsg=JSON.parse(item[0].MainMessage);
@@ -58,7 +65,8 @@ module.exports ={
                 action.updatetext(JSON.stringify(mainMsg,message.MessageID),
                 message.MessageID).then((item)=>{
                    if(item.changedRows===1){
-                    socket.emit("addtext",temp)
+                    io.to(message.MessageID).
+                    emit("addtext",temp)
                    }
                 })
             })
