@@ -45,7 +45,6 @@ export default function Chat(props) {
     socket.getInstance().on("chatmsg",(obj)=>{
       if(obj.length===0)setChat([]);
       else{
-        console.log(obj)
         let temp=JSON.parse(obj[0].MainMessage);
         setMessageID(obj[0].MessageID);
         setChat(temp);
@@ -54,7 +53,6 @@ export default function Chat(props) {
   },[])
   useEffect(() => {
     socket.getInstance().on("addtext",(obj)=>{
-      console.log(obj)
       setchange(obj);
     })
   },[]);
@@ -105,6 +103,7 @@ export default function Chat(props) {
       }}
       placeholder="输入文本,不能为空"
       onPressEnter={sendMessage}
+      value={text}
       onChange={(e)=>{
         settext(e.target.value)
       }}

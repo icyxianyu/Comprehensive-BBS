@@ -189,7 +189,7 @@ module.exports ={
         let PersonID=req.query.PersonID;
         action.Focus(PersonID).then((item)=>{
             let temp=item[0]?.focus?.split(" ")?.filter((item)=>item!=="")
-    
+            if(temp.length===0) temp=[""];
                 action.SelectFocus(temp).then((item)=>{
                     res.send(JSON.stringify({
                         code:200,

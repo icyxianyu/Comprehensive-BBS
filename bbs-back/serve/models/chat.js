@@ -22,8 +22,33 @@ module.exports={
             })
         })
     },
-    sendtext(){
-
+    sendtext(MessageIDList,PersonID){
+        console.log(MessageIDList,PersonID)
+        return new Promise((resolve, reject)=>{
+            db.query(`update chatmsg set notSeen=notSeen+1,MessageIDList=? where PersonID=?`,
+            [MessageIDList,PersonID],(err,result)=>{
+                if(err) reject(err);
+                else resolve(result);
+            })
+        })
+    },
+    changeText(number,MessageIDList,PersonID){
+        return new Promise((resolve, reject)=>{
+            db.query(`update chatmsg set notSeen=notSeen-?,MessageIDList=? where PersonID=?`,
+            [number,MessageIDList,PersonID],(err,result)=>{
+                if(err) reject(err);
+                else resolve(result);
+            })
+        })
+    }
+    ,
+    getMsg(PersonID){
+        return new Promise((resolve, reject)=>{
+            db.query(`select * from chatmsg where PersonID=?`,[PersonID],(err,result)=>{
+                if(err) reject(err);
+                else resolve(result);
+            })
+        })
     },
     createtext(message){
         return new Promise((resolve, reject)=>{
@@ -42,8 +67,7 @@ module.exports={
     updatetext(text,MessageID){
         return new Promise((resolve, reject)=>{
             db.query(`update chat set MainMessage=? where MessageID=?`,
-            [text,MessageID
-            ],
+            [text,MessageID],
             (err,result)=>{
                 if(err) reject(err);
                 else resolve(result);
