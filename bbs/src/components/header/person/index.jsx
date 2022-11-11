@@ -6,11 +6,11 @@ import {useNavigate} from "react-router-dom"
 import { useCookies} from 'react-cookie';
 import {imageurl} from "#/constant"
 import socket from "#/utils/socket.js"
+import ChatIndex from "#/pages/chat/index.jsx"
 export default function Person() {
 const [islogin,setlogin] = useState(false);
 const [visible,setvisible] = useState(false);
 const [cookie]=useCookies();
-const [chatMsg,setchatMsg] = useState({});
 const [notSeen,setnotSeen] = useState(0);
 const [Ref,setRef]=useState(0);
 const data=[
@@ -21,7 +21,6 @@ const data=[
         Icon:<Badge count={notSeen}></Badge>,
         render:()=>{
             setvisible(true)
-           console.log(chatMsg)
         }
     },{
         name:"temp",
@@ -46,13 +45,12 @@ useEffect(()=>{
     }
 },[]);
 useEffect(()=>{
-socket.getInstance().on("MessageInfo",(value)=>{
-    setchatMsg(value.MessageIDList===""?{}:JSON.parse(value.MessageIDList));
-    setnotSeen(value.notSeen)
+socket.getInstance().on("MessageNumber",(value)=>{
+    setnotSeen(value)
 })
 },[])
 useEffect(()=>{
-    socket.getInstance().on("addMsg",(value)=>{
+    socket.getInstance().on("addMsg",()=>{
         setRef(Math.random());
     })
 },[])
@@ -61,9 +59,9 @@ useEffect(()=>{
         setnotSeen(notSeen+1)
     };
 },[Ref]) 
-
 const navigate=useNavigate();
-function changetoPerson(){
+const changetoPerson=()=>{
+    console.log("XXXX")
     if(cookie.JWT){
         navigate(`/personPage/${localStorage.getItem("PersonID")}`)
     }
@@ -73,31 +71,31 @@ function changetoPerson(){
 }
 return (
     <div>
-            <div onClick={()=>changetoPerson()}>    
-                {
-                    islogin?
-                    <Popover 
-                        content={
-                        data.map((item)=>{
-                            return <div 
-                                key={item.key}
-                                style={{cursor: 'pointer',
-                                        borderBottom: '1px solid #ccc',
-                                        padding: '5px',
-                                        userSelect: 'none'
-                                        }}
-                                onClick={item.render}
-                            >{item.Icon}
-                            <span style={{padding:'0 5px'}}>{item.name}</span></div>
-                        })
-                        }>
-                        <Badge count={notSeen}>
-                            <Avatar src={`${imageurl}${localStorage.getItem('avatar')}`} 
-                                style={{border: '1px solid #ccc'}}>
-                            </Avatar>
-                        </Badge>
-                    </Popover>:
-                <Avatar icon={<UserOutlined />}/>
+      <div>    
+     {
+       islogin?
+    <Popover 
+        content={
+        data.map((item)=>{
+            return <div 
+                key={item.key}
+                style={{cursor: 'pointer',
+                        borderBottom: '1px solid #ccc',
+                        padding: '5px',
+                        userSelect: 'none'
+                        }}
+                onClick={item.render}
+            >{item.Icon}
+            <span style={{padding:'0 5px'}}>{item.name}</span></div>
+        })
+        }>
+        <Badge count={notSeen} onClick={()=>changetoPerson()}>
+            <Avatar src={`${imageurl}${localStorage.getItem('avatar')}`} 
+                style={{border: '1px solid #ccc'}}>
+            </Avatar>
+        </Badge>
+        </Popover>:
+        <Avatar icon={<UserOutlined />} onClick={()=>changetoPerson()}/>
                 }
             </div>
             <Modal
@@ -105,8 +103,10 @@ return (
                 visible={visible}
                 onCancel={handleCancel}
                 maskClosable={false}
-                footer={null}  
+                footer={null}
+                width={600}
             >
+                <ChatIndex></ChatIndex>
             </Modal>
     </div>
 )

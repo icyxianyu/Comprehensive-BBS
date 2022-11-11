@@ -5,7 +5,7 @@ export default function index() {
     <>
     {
       temp.map((_,key)=>{
-          return (<div style={{textAlign:"center"}}  key={Math.random()}>占位占位，以后可能会加入新东西</div>)
+          return (<div style={{textAlign:"center"}}  key={Math.random()}></div>)
       })
     }
     </>

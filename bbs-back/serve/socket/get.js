@@ -11,40 +11,52 @@ function midtoken(JWT) {
       } catch(err) {
             decoded ={};
       }finally{
-            return decoded.PersonID;
+            return decoded;
       }
 }
 const map=new Map();
 const MessageIDList=new Map();
 module.exports ={
     login(obj,socket,io){
-        const PersonID=midtoken(JSON.parse(obj).PersonID);
+        const PersonID=midtoken(JSON.parse(obj).PersonID)?.PersonID;
         socket.join(PersonID);
         io.of("/").in(PersonID).allSockets().then((item)=>{
             map.set(PersonID,item.entries().next().value[0])
         });
         
         action.getMsg(PersonID).then((item)=>{
-            socket.emit("MessageInfo",item[0]);
+            socket.emit("MessageNumber",item[0].notSeen);
          })
     },
     getMessage(obj,socket){
             let message=JSON.parse(obj);
-            let GetID=midtoken(message.GetID);
+            let GetID=midtoken(message.GetID).PersonID;
             let FindID=message.FindID
             action.getMessageByPersonID(GetID, FindID).then((item)=>{
-                if(item.length!==0){
-                    socket.join(item[0].MessageID);
-                    let message=MessageIDList.get(item[0].MessageID)??new Set();
-                    message.add(GetID);
-                    MessageIDList.set(item[0].MessageID,message);
-                }
-                socket.emit("chatmsg",item);
+            Promise.all([action.getavatar(GetID),action.getavatar(FindID)]).then((items)=>{
+                    let GetAvatar=items[0][0].avatar;
+                    let FindAvatar=items[1][0].avatar;
+                    item[0].GetAvatar=GetAvatar;
+                    item[0].FindAvatar=FindAvatar;
+                    if(item.length!==0){
+                        socket.join(item[0].MessageID);
+                        let message=MessageIDList.get(item[0].MessageID)??new Set();
+                        message.add(GetID);
+                        MessageIDList.set(item[0].MessageID,message);
+                    }
+                    socket.emit("chatmsg",item);  
+                })
             })
+    },
+    getMessageAll(obj,socket){
+        let PersonID=midtoken(obj.Person).PersonID;
+        action.getMessageSelf(PersonID).then((item)=>{
+            socket.emit("messageIdList",item)
+        })
     },
     sendMessage(obj,socket,io){
         let message=JSON.parse(obj);
-        let sendID=midtoken(message.sendID);
+        let sendID=midtoken(message.sendID).PersonID;
         let toPersonID=message.toPersonID;
         if(message.MessageID===""){
             let MessageID=uuid4();
@@ -112,6 +124,30 @@ module.exports ={
     },
     leaveRoom(obj,socket){
         socket.leave(obj);
+    },
+    joinLiveRoom(obj,socket,io){
+        let RoomID=obj.RoomID;
+        let PersonInfo=midtoken(obj.PersonID).username;
+        socket.join(RoomID);
+        io.to(RoomID).emit("joinRoomName",
+        {   type:"join",
+            name:PersonInfo,
+            id:uuid4(),
+        });
+    },
+    talkToRoom(obj,socket,io){
+        let RoomID=obj.RoomID;
+        let message=obj.message
+        let PersonInfo=midtoken(obj.PersonID).username;
+        io.to(RoomID).emit("addTalk",
+        {   type:"word",
+            name:PersonInfo,
+            message,
+            id:uuid4()
+        });
+    },
+    leaveRoom(obj,socket){
+        socket.leave(obj.RoomID);
     }
 }
 function send(io,PersonID,obj){

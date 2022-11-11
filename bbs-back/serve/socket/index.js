@@ -7,6 +7,11 @@ const get= require('./get.js');
 io.on('connection', socket => {
     socket.on('login',(value)=>get.login(value,socket,io));
     socket.on('getMessage',(value)=>get.getMessage(value,socket));
+    socket.on('getMessageAll',(value)=>get.getMessageAll(value,socket))
     socket.on("sendMessage",(value)=>get.sendMessage(value,socket,io));
+
+    socket.on("joinLiveRoom",(value)=>get.joinLiveRoom(value,socket,io));
+    socket.on("talkToRoom",(value)=>get.talkToRoom(value,socket,io));
+    socket.on("leaveRoom",(value)=>get.leaveRoom(value,socket,io));
   });
-server.listen(4000,()=>{console.log('websocket listening on port 3000')});
+server.listen(3000,()=>{console.log('websocket listening on port 3000')});

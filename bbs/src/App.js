@@ -17,13 +17,16 @@ export default function App() {
   const style="white";
   const element=useRoutes(routes);
     return(
-      <Layout>
+      <Layout style={{
+        minWidth:"1250px",
+      }}>
         <Header 
           style={{
           backgroundColor:style,
           position:'fixed',
           width:'100%' ,
           height:"6vh",
+        minWidth:"1250px",
           minHeight:"50px",
           zIndex:2}}>
             <HeaderPage></HeaderPage>

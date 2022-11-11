@@ -1,8 +1,7 @@
 import React ,{useRef,useEffect,useState}from 'react'
 import {PlayCircleOutlined,CustomerServiceOutlined } from "@ant-design/icons"
 import flvJs from 'flv.js'
-import PubSub from 'pubsub-js'
-import { nanoid } from 'nanoid'
+import socket from "#/utils/socket.js"
 let bar=null;
 
 export default function Player(prop) {
@@ -17,6 +16,7 @@ export default function Player(prop) {
         live.volume=volume/100;
     }
     const begin=()=>{
+      
       live.unload();
       live.volume=volume/100;
       live.load();
@@ -49,16 +49,16 @@ export default function Player(prop) {
       }
     })
     useEffect(()=>{
-      const pubsub_token=PubSub.subscribe("barrageAdd",(_,value)=>{
-       
+      socket.getInstance().on("addTalk",(value)=>{
         let top=(videoRef.current.clientHeight)*Math.random()*0.25
         let tempval={
-          id:nanoid(),
-          value,
+          id:value.id,
+          value:value.message,
           height:top,
           color:"white",
           left:"100%"
         }
+        console.log(tempval,barrage)
         setbarrage([...barrage,tempval]);
         clearInterval(bar);
         bar=setInterval(()=>{
@@ -66,18 +66,14 @@ export default function Player(prop) {
             p.style.left=parseFloat(p.style.left)-speed+"%";
           }
         },50)
-
       })
-      return function(){
-        PubSub.unsubscribe(pubsub_token)
-      }
     })
     
   return (
       <div className="playbox-main">
           <div className="playbox-main-box">
             <div style={{position:"relative"}}>
-                <video ref={videoRef} className='playbox-main-video' >
+                <video ref={videoRef} className='playbox-main-video' muted>
                 </video>
                 <div style={{position:"absolute",width:"100%",height:"100%",top:"0",overflow:"hidden",whiteSpace:"nowrap"}} ref={barRef}>
                 {

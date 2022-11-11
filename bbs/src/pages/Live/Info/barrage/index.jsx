@@ -1,32 +1,55 @@
-import React,{useState,useRef} from 'react'
+import React,{useState,useRef,useEffect} from 'react'
 import {message} from "antd"
-import {nanoid} from "nanoid"
-import PubSub from 'pubsub-js'
-export default function Barrage() {
+import socket from "#/utils/socket.js"
+import {useCookies} from "react-cookie"
+
+export default function Barrage(props) {
   const [word,setword]=useState([]);
+  const [changeState,setstate]=useState({})
   const Ref=useRef();
   const Ref2=useRef();
-
+  const [cookie]=useCookies();
+  useEffect(()=>{
+    socket.getInstance().on("joinRoomName",(value)=>{
+      setstate(value)
+    })
+    socket.getInstance().on("addTalk",(value)=>{
+      setstate(value)
+    })
+  },[])
+  useEffect(()=>{
+    if(JSON.stringify(changeState)!=="{}"){
+      console.log(changeState)
+        setword([...word,changeState]);
+        Ref2.current.scrollTop = Ref2.current.scrollHeight;
+        }
+  },[changeState])
   const sendtext=()=>{
     let value=Ref.current.value.replace(/^\s+/, '').replace(/\s+$/, '');;
     if(value.length===0){
         message.error("输入文字不能为空");
         return;
     }else{
-        setword([...word,{value,id:nanoid()}]);
-        Ref2.current.scrollTop = Ref2.current.scrollHeight;
+        socket.getInstance().emit("talkToRoom",{
+          RoomID:props.RoomID,
+          message:Ref.current.value,
+          PersonID:cookie.JWT
+        })
         // 暂时
-        PubSub.publish("barrageAdd",value);
         Ref.current.value="";
     }
   }
   return (
     <div className="playbox-barrage">
       <div className="playbox-barrage-text" ref={Ref2}>
-          {word.map((item,key)=>{
-            return <div key={item.id} className="text-page">
-              <span>{key}:</span>
-              {item.value}</div>
+          {word.map((item)=>{
+            return item.type==='join'?
+            <div key={item.id} style={{textAlign: 'center'}}>
+              {item.name+"加入直播间"}</div>
+
+            :<div key={item.id} className="text-page">
+              <span >{item.name}:</span>
+              {item.message}</div>
           })}
       </div>
       

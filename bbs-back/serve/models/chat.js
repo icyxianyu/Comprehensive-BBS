@@ -1,12 +1,37 @@
 const connc= require("./index.js");
 const db=connc();
 module.exports={
+    getMessageSelf(PersonID){
+        return new Promise((resolve, reject)=>{
+            db.query(
+            `select MessageID,PersonID,Username,avatar 
+            from chat,usermsg where 	
+            if(?=UserID1 ,PersonID=UserID2,PersonID=UserID1) and 
+                (UserID1=? OR UserID2=?)`,
+                [PersonID,PersonID,PersonID],
+                (err,result)=>{
+                    if(err) reject(err);
+                    else resolve(result);
+                })
+        })
+    },
     getMessageByPersonID(PersonID1,PersonID2){
         return new Promise((resolve, reject)=>{
             db.query(
             `select * from chat where 
                 (UserID1=? AND UserID2=?) OR (UserID2=? AND UserID1=?)`,
                 [PersonID1,PersonID2,PersonID1,PersonID2],
+                (err,result)=>{
+                    if(err) reject(err);
+                    else resolve(result);
+                })
+        })
+    },
+    getavatar(PersonID1,PersonID2){
+        return new Promise((resolve, reject)=>{
+            db.query(
+            `select avatar from usermsg where PersonID= ? OR PersonID=?`,
+                [PersonID1,PersonID2],
                 (err,result)=>{
                     if(err) reject(err);
                     else resolve(result);
