@@ -199,3 +199,25 @@ background-color: rgb(247, 247, 247);
     padding-left:5px;
     width:calc(100% - 150px);
   }
+  .RowLive{
+    display:flex;
+    flex-wrap:row wrap;
+    justify-content:space-between;
+    width:90%;
+    margin: auto;
+  }
+  .LiveInfoBox{
+    flex: 0 0 18%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    box-shadow:  1px 1px 3px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s;
+    cursor: pointer;
+  }
+  .LiveInfoBox:hover{
+    box-shadow:  1px 1px 10px rgba(0, 0, 0, 0.2);
+    
+  }
+  .LiveInfoBox .imagebox{
+    height:100px;
+  }

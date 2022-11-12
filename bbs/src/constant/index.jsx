@@ -25,3 +25,51 @@ export const Color=[
 "LightSteelBlue ",
 "PaleVioletRed ",
 ]
+export const mockInfo=[
+    {
+        "测试1" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试2" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试3" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试4" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试5" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试6" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试7" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试8" :{
+            publisher:{},
+            subscribers: []
+        }
+     },    {
+        "测试9" :{
+            publisher:{},
+            subscribers: []
+        }
+     },
+ ]

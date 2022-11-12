@@ -23,9 +23,8 @@ export default function Quick() {
                 setimgurl(response.data.qrimg);
                 time=setInterval(()=>{
                     let temp=item.data.unikey;
-                    console.log("------",temp)
                     qrCheck(temp)
-        .then((item)=>{ console.log(ready.current)
+        .then((item)=>{ 
                         if(item.code===802&&ready.current===false){
                                 setItem(item);
                                 setready(true)

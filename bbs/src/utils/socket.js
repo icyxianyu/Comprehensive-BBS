@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 let socket=null ;
 export default{
     connect(){
-        socket=io("ws://localhost:3000");
+        socket=io("ws://localhost:3001");
     },
     getInstance(){
         if(socket!==null)

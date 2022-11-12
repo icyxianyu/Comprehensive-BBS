@@ -37,7 +37,8 @@ const data=[
     }
 ]
 const handleCancel=()=>{
-    setvisible(false)
+    setvisible(false);
+    
 }
 useEffect(()=>{
     if(cookie.JWT){

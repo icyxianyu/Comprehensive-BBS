@@ -14,4 +14,4 @@ io.on('connection', socket => {
     socket.on("talkToRoom",(value)=>get.talkToRoom(value,socket,io));
     socket.on("leaveRoom",(value)=>get.leaveRoom(value,socket,io));
   });
-server.listen(3000,()=>{console.log('websocket listening on port 3000')});
+server.listen(3001,()=>{console.log('websocket listening on port 3001')});

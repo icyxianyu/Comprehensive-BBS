@@ -87,7 +87,6 @@ export default function Chatbox(props) {
         maxRows: 3,
       }}
       placeholder="输入文本,不能为空"
-      onPressEnter={sendMessage}
       value={text}
       onChange={(e)=>{
         settext(e.target.value)

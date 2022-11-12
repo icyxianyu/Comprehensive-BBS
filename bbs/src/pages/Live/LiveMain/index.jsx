@@ -1,10 +1,12 @@
 import React ,{useEffect,useState} from 'react'
-import {message, Empty,Button, Layout,Spin,Row,Col,Modal,Form, Input ,} from "antd"
+import {message, Empty,Button, Layout,Spin,Row,Col,Modal,Form, Input ,Divider} from "antd"
 import {getLivegroup} from "#/utils/bank"
 import {TeamOutlined} from "@ant-design/icons"
 import {useNavigate} from "react-router-dom"
+import {mockInfo} from "#/constant/index.jsx"
 const {Content} = Layout;
-const url="http://localhost:8000/live"
+const url="http://localhost:8000/live";
+
 export default function LiveMain() {
   const navigate=useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,8 +14,6 @@ export default function LiveMain() {
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(false);
   const [live,setlive]=useState({});
-
-
   const begin=()=>{
     getLivegroup().then((item)=>{
       if(!item.live){
@@ -79,29 +79,35 @@ export default function LiveMain() {
           :
           <>
           <h2 style={{textAlign:"center"}}>
-            当前服务器直播间数量为 {Object.keys(live).length} <Button onClick={showModal} type="primary">点击开播</Button></h2>
-            
-          <Row>
-          <Col offset={4}></Col>
+            当前服务器直播间数量为 {Object.keys(live).length}
+            <Button onClick={showModal} type="primary">点击开播</Button></h2>
+          <Row className="RowLive" >
           {
               Object.keys(live).map((item)=>{
                 return (
-                  <Col key={Math.random()} span={4} 
+                  <Col key={Math.random()}  className="LiveInfoBox"
                     onClick={()=>navigate(`LiveInfo/${item}`)}>
-                    <div
-                      style={{width:"100%", 
-                      height:"100px",
-                      backgroundColor:"#ccc",
-                      borderRadius:"10px",
-                      padding:"10px 0px 0px 10px",
-                      cursor:"pointer"
-                      }}>
-                          {live[item].publisher.stream}直播间
+                    <div>
+                      <div className="imagebox"></div>
+                    <Divider orientation="left">{live[item].publisher.stream}直播间</Divider>
                         <div>
                         <TeamOutlined />{live[item].subscribers.length}</div>
                       </div>
                     </Col>
                 )
+              })
+          }
+          {/* 以下为假数据 */}
+          {
+              mockInfo.map((item)=>{
+                return <Col key={Math.random()}  className="LiveInfoBox">
+                    <div>
+                    <div className="imagebox"></div>
+                    <Divider orientation="left">{}直播间</Divider>
+                        <div>
+                        <TeamOutlined />{0}</div>
+                      </div>
+                    </Col>
               })
           }
         </Row>

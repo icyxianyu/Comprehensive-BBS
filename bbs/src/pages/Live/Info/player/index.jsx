@@ -11,6 +11,7 @@ export default function Player(prop) {
     const [live,setLive]=useState(null);
     const [volume,setVolume]=useState(0);
     const [barrage,setbarrage]=useState([]);
+    const [changeState,setState]=useState(null);
     const changeVloume=(e)=>{
         setVolume(e.target.value);
         live.volume=volume/100;
@@ -50,15 +51,19 @@ export default function Player(prop) {
     })
     useEffect(()=>{
       socket.getInstance().on("addTalk",(value)=>{
+        setState(value)
+      })
+    },[])
+    useEffect(()=>{
+      if(changeState!==null){
         let top=(videoRef.current.clientHeight)*Math.random()*0.25
         let tempval={
-          id:value.id,
-          value:value.message,
+          id:changeState.id,
+          value:changeState.message,
           height:top,
           color:"white",
           left:"100%"
         }
-        console.log(tempval,barrage)
         setbarrage([...barrage,tempval]);
         clearInterval(bar);
         bar=setInterval(()=>{
@@ -66,9 +71,11 @@ export default function Player(prop) {
             p.style.left=parseFloat(p.style.left)-speed+"%";
           }
         },50)
-      })
-    })
-    
+      }
+      return ()=>{
+        clearInterval(bar);
+      }
+    },[changeState])
   return (
       <div className="playbox-main">
           <div className="playbox-main-box">
