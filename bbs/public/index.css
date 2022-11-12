@@ -221,3 +221,12 @@ background-color: rgb(247, 247, 247);
   .LiveInfoBox .imagebox{
     height:100px;
   }
+  .LiveInfoBox .LiveInfo{
+    display:flex;
+    justify-content:space-between;
+    padding:10px;
+  }
+  .LiveInfoBox .LiveInfo .Person{
+    padding-right:5px;
+
+  }

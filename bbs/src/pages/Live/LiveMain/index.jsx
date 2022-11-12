@@ -1,5 +1,5 @@
 import React ,{useEffect,useState} from 'react'
-import {message, Empty,Button, Layout,Spin,Row,Col,Modal,Form, Input ,Divider} from "antd"
+import {message, Empty,Button, Layout,Spin,Row,Col,Modal,Form, Input ,Divider, Avatar} from "antd"
 import {getLivegroup} from "#/utils/bank"
 import {TeamOutlined} from "@ant-design/icons"
 import {useNavigate} from "react-router-dom"
@@ -18,7 +18,7 @@ export default function LiveMain() {
     getLivegroup().then((item)=>{
       if(!item.live){
         message.info("抱歉，当前并无直播");
-        setIsEmpty(true);
+        // setIsEmpty(true); 记得去掉
       }
       else{      
         setlive(item.live);
@@ -28,7 +28,7 @@ export default function LiveMain() {
   }
   useEffect(()=>{
     begin();
-  },[isModalOpen])
+  },[])
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -79,7 +79,9 @@ export default function LiveMain() {
           :
           <>
           <h2 style={{textAlign:"center"}}>
-            当前服务器直播间数量为 {Object.keys(live).length}
+            当前服务器直播间数量为 {Object.keys(live).length
+                + mockInfo.length
+            }
             <Button onClick={showModal} type="primary">点击开播</Button></h2>
           <Row className="RowLive" >
           {
@@ -102,10 +104,14 @@ export default function LiveMain() {
               mockInfo.map((item)=>{
                 return <Col key={Math.random()}  className="LiveInfoBox">
                     <div>
-                    <div className="imagebox"></div>
+                      <div className="imagebox"></div>
                     <Divider orientation="left">{}直播间</Divider>
-                        <div>
-                        <TeamOutlined />{0}</div>
+                    <div className="LiveInfo"> 
+                    <Avatar/>                      
+                      <div className='Person'>
+                          <TeamOutlined />{0}
+                        </div>
+                      </div>
                       </div>
                     </Col>
               })
@@ -116,6 +122,7 @@ export default function LiveMain() {
           </Content>
           </Spin>
           <Modal title="开播配置" 
+              destroyOnClose={true}
                     visible={isModalOpen}
                     onCancel={handleCancel}
                     footer={null}>

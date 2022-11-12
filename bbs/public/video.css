@@ -27,8 +27,23 @@
     bottom:1%;
     opacity:0;
     transition: all 0.5s;
+    padding:10px;
+    width:100%;
+    justify-content:space-between;
 }
+playbox-main-edit .right{
 
+}
+.playbox-main-edit .left{
+    display: flex;
+
+}
+.playbox-main-edit .left div{
+    padding:0 10px;
+}
+.playbox-main-edit .playbox-pause-play{
+    
+}
 .playbox-barrage{
     flex:1;
     padding:5px;
@@ -44,6 +59,22 @@
     max-height:500px;
     
 }
+.playbox-main-edit-volume{
+    position: relative;
+}
+.playbox-main-edit-volume .volume{
+    position: absolute;
+    transform-origin: 0 0;
+    transition: all 0.5s;
+    top:-2px;
+    left:37%;
+    transform: rotate(-90deg);
+
+}
+.playbox-main-edit-volume .volume-icon{
+
+}
+
 .text-page{
     width:100%;
     word-break: break-all;

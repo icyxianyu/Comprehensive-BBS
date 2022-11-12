@@ -1,31 +1,69 @@
 import React ,{useRef,useEffect,useState}from 'react'
-import {PlayCircleOutlined,CustomerServiceOutlined } from "@ant-design/icons"
+import {PlayCircleFilled,PauseCircleOutlined ,CustomerServiceOutlined,FullscreenOutlined,FullscreenExitOutlined } from "@ant-design/icons"
 import flvJs from 'flv.js'
 import socket from "#/utils/socket.js"
 let bar=null;
-
+let style={
+  color:"white",fontSize:'25px',cursor:'pointer'
+}
 export default function Player(prop) {
     const speed=0.2
     const videoRef=useRef();
     const barRef=useRef();
+    const leave=useRef();
     const [live,setLive]=useState(null);
     const [volume,setVolume]=useState(0);
     const [barrage,setbarrage]=useState([]);
     const [changeState,setState]=useState(null);
+    const [isplay,setplaystate]=useState(false);
+    const [isFull,setFull]=useState(false);
+    const [show,setshow]=useState('none');
     const changeVloume=(e)=>{
         setVolume(e.target.value);
+      if(videoRef.current.muted)
+        videoRef.current.muted = false;
+      if(volume<5)
+        live.volume =0;
+      else
         live.volume=volume/100;
     }
     const begin=()=>{
       
-      live.unload();
       live.volume=volume/100;
-      live.load();
       live.play();
+      setplaystate(true)
+
     }
     const end=()=>{
       live.pause();
+      setplaystate(false)
     }
+    const showVolume=()=>{
+      if(show==="none") setshow('block')
+      else setshow('none');
+    }
+    const leaveMouse=()=>{
+      leave.current=setTimeout(()=>{
+        setshow('none')
+      },1000)
+    }
+    const enterMouse=()=>{
+      clearTimeout(leave.current)
+    }
+    const changeFull=()=>{
+      full(videoRef.current)
+    }
+    function full(ele) {
+      if (ele.requestFullscreen) {
+          ele.requestFullscreen();
+      } else if (ele.mozRequestFullScreen) {
+          ele.mozRequestFullScreen();
+      } else if (ele.webkitRequestFullscreen) {
+          ele.webkitRequestFullscreen();
+      } else if (ele.msRequestFullscreen) {
+          ele.msRequestFullscreen();
+      }
+}
     useEffect(()=>{
       if (flvJs.isSupported()) {
             if(prop.RoomID){
@@ -40,6 +78,8 @@ export default function Player(prop) {
             setLive(flvPlayer);
             
               flvPlayer.load();
+              flvPlayer.play();
+              setplaystate(true)
           }
       }
     },[])
@@ -100,14 +140,32 @@ export default function Player(prop) {
                 </div>
             </div>
             <div className="playbox-main-edit">
-                <button onClick={begin}><PlayCircleOutlined />点击开始</button>
-                <button onClick={end}>点击暂停</button>
-                <div className="playbox-main-edit-volume">
-                  <CustomerServiceOutlined style={{color:"white"}}/>
-                    <input type="range" onChange={changeVloume} value={volume}
-                    ></input>
+              <div className="right">
+                  <div className="playbox-pause-play">
+                  {
+                  isplay?<PauseCircleOutlined onClick={end} style={style}>点击暂停</PauseCircleOutlined>
+                  
+                      :<PlayCircleFilled  onClick={begin} style={style}>点击开始</PlayCircleFilled>
+                      }
+                  </div>
                 </div>
+                <div className="left">
+                    <div className="playbox-main-edit-volume" >
+                      <CustomerServiceOutlined style={style} className="volume-icon"
+                      onClick={showVolume}/>
 
+                        <input type="range" 
+                        onChange={changeVloume}
+                        onMouseEnter={enterMouse}
+                        onMouseLeave={leaveMouse}
+                        style={{display:show}} 
+                        value={volume} className="volume"
+                        ></input>
+                    </div>
+                    <div className="playbox-main-edit-full" onClick={changeFull}>
+                        {isFull?<FullscreenExitOutlined style={style}/>:<FullscreenOutlined style={style}/>}
+                    </div>
+                </div>
             </div>
           </div>
       </div>
