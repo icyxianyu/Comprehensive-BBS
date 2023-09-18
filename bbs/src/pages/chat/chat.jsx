@@ -64,7 +64,7 @@ export default function Chatbox(props) {
           <div  className="chatbox" ref={Ref}>
         {
           chatMsg.map((item)=>{
-            return<div key={item.time} 
+            return <div key={item.time} 
               className={(item.PersonID===localStorage.getItem("PersonID")
             ?"right":'left')+" single"}>
               <Avatar className="avatar"

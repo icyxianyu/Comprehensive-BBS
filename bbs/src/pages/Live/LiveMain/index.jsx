@@ -3,9 +3,10 @@ import {message, Empty,Button, Layout,Spin,Row,Col,Modal,Form, Input ,Divider, A
 import {getLivegroup} from "#/utils/bank"
 import {TeamOutlined} from "@ant-design/icons"
 import {useNavigate} from "react-router-dom"
-import {mockInfo} from "#/constant/index.jsx"
+import {mockInfo,url} from "#/constant/index.jsx"
+
 const {Content} = Layout;
-const url="http://localhost:8000/live";
+// const url="http://localhost:8000/live";
 
 export default function LiveMain() {
   const navigate=useNavigate();
@@ -18,7 +19,7 @@ export default function LiveMain() {
     getLivegroup().then((item)=>{
       if(!item.live){
         message.info("抱歉，当前并无直播");
-        // setIsEmpty(true); 记得去掉
+        setIsEmpty(true);
       }
       else{      
         setlive(item.live);
@@ -80,7 +81,6 @@ export default function LiveMain() {
           <>
           <h2 style={{textAlign:"center"}}>
             当前服务器直播间数量为 {Object.keys(live).length
-                + mockInfo.length
             }
             <Button onClick={showModal} type="primary">点击开播</Button></h2>
           <Row className="RowLive" >
@@ -100,7 +100,7 @@ export default function LiveMain() {
               })
           }
           {/* 以下为假数据 */}
-          {
+          {/* {
               mockInfo.map((item)=>{
                 return <Col key={Math.random()}  className="LiveInfoBox">
                     <div>
@@ -115,7 +115,7 @@ export default function LiveMain() {
                       </div>
                     </Col>
               })
-          }
+          } */}
         </Row>
         </>
           }

@@ -43,7 +43,6 @@ export default function Playing() {
       })
     useEffect(()=>{
         PubSub.subscribe("playstate",(_,value)=>{
-
             setPlaystate(value);
         })
         return function (){
@@ -111,7 +110,7 @@ export default function Playing() {
                 {
                   lyrics.map((item,key)=>{
                     return <li style={{listStyle:"none"}} key={item[0]} 
-                    className={(key===playIndex-1?"playing":"")+' lyrics-li'}>
+                    className={(key===playIndex-1?"playing ":" ")+'lyrics-li'}>
                     <div className="top">{item[1][0]}</div>
                     <div className="bottom">{item[1][1]}</div>
 

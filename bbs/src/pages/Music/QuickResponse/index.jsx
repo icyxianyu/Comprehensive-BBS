@@ -13,6 +13,7 @@ export default function Quick() {
         if(isready)
         ready.current=true;
     },[readyItem])
+    
     useEffect(()=>{
             qrKey()
         .then((item)=>{
@@ -30,7 +31,7 @@ export default function Quick() {
                                 setready(true)
                         }else if(item.code===803){
                                 message.info("登陆成功");
-                                navigate("/musicPage")
+                                navigate("/musicPage");
                                 clearInterval(time);
                                 return;
                         }

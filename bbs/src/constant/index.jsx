@@ -8,6 +8,9 @@ export const loginInfo=[
     }
 ]
 export const imageurl="http://localhost:3333/user/avatar/"
+export const url="http://localhost:8000/live"
+// export const url="http://124.221.178.123:8000/live"
+// export const imageurl="http://124.221.178.123:3333/user/avatar"
 export const Color=[
 "magenta",
 "red",

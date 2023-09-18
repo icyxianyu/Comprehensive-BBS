@@ -5,6 +5,7 @@ import {useParams,useNavigate} from "react-router-dom"
 import {PageHeader} from "antd"
 import {useCookies} from "react-cookie"
 import socket from "#/utils/socket.js"
+
 export default function LiveInfo() {
 const navigate=useNavigate();
 const {RoomID} = useParams();

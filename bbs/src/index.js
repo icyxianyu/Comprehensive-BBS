@@ -1,7 +1,7 @@
 import React from 'react';
 import App from './App'
 import { createRoot } from 'react-dom/client';
-import {HashRouter as Router} from "react-router-dom"
+import {HashRouter as Router ,BrowserRouter as Router1} from "react-router-dom"
 import { CookiesProvider } from 'react-cookie';
 import "./assets/music/index.css"
 import 'animate.css';

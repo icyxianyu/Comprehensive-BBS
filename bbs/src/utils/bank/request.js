@@ -1,6 +1,7 @@
 import axios from 'axios';
 const request =axios.create({
-    baseURL: '/bank',
+    // baseURL: 'http://124.221.178.123:8000',
+    baseURL:'/bank',
     timeout: 5000
 })
 

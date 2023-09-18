@@ -22,19 +22,19 @@ export const personMsg=(value)=>{//获取用户信息
         url:`/user/person?PersonID=${value}`,
     })
 }
-export const isFocused=(value)=>{
+export const isFocused=(value)=>{//是否关注
     return request({
         method:'get',
         url:`/user/isfollow?Search=${value}`
     })
 }
-export const changeFocus=(focus,action)=>{
+export const changeFocus=(focus,action)=>{//修改关注
     return request({
         method:'get',
         url:`/user/changeFocus?focusID=${focus}&action=${action}`
     })
 }
-export const followMsg=(PersonID)=>{
+export const followMsg=(PersonID)=>{//关注信息
     return request({
         method:'get',
         url:`/user/followMsg?PersonID=${PersonID}`
@@ -63,7 +63,7 @@ export const searchtext=(value)=>{//搜索文章 根据personID的内容
         }
     })
 }
-export const searchcollection=(value)=>{
+export const searchcollection=(value)=>{//是否收藏
     return request({
         method:"post",
         url:'/text/getcollectionByPersonID',
